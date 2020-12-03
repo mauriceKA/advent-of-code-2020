@@ -332,7 +332,7 @@ var numTrees = cleanedInput.map((line,index) => {
 console.log(numTrees);
 
 // part 2
-var numTrees = [
+var productOfNumTrees = [
     { right:1, down:1 },
     { right:3, down:1 },
     { right:5, down:1 },
@@ -346,4 +346,4 @@ var numTrees = [
     }).reduce((acc, val) => acc + val);
     return numTrees;
 }).reduce((acc, val) => acc * val, 1);
-console.log(numTrees);
+console.log(productOfNumTrees);
