@@ -339,7 +339,7 @@ var productOfNumTrees = [
     { right:7, down:1 },
     { right:1, down:2 },
 ].map( direction =>  {
-    var numTrees = input.split("\n").filter( line => { return line.length > 0; } ).map((foo,index) => {
+    var numTrees = cleanedInput.map((foo,index) => {
         var i = index * direction.down;
         var line = cleanedInput[i];
         return (i <= cleanedInput.length) && line.charAt((index * direction.right) % line.length) === "#" ? 1 : 0;
