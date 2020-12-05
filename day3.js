@@ -320,13 +320,12 @@ var input = `..#..#......#..#.......#...#.#.
 .....#...##.#.#.##.....#...#...
 ####.###...##..##...#..#..#..##
 ......#..#..#.........#...#.#..
-....###.....##.##....#.##.....#
-`;
+....###.....##.##....#.##.....#`;
 
-var cleanedInput = input.split("\n").filter( line => { return line.length > 0; } );
+var slopeRows = input.split("\n");
 
 // part 1
-var numTrees = cleanedInput.map((line,index) => {
+var numTrees = slopeRows.map((line,index) => {
     return line.charAt((index * 3) % line.length) === "#" ? 1 : 0;
 }).reduce((acc, val) => acc + val);
 console.log(numTrees);
@@ -339,10 +338,10 @@ var productOfNumTrees = [
     { right:7, down:1 },
     { right:1, down:2 },
 ].map( direction =>  {
-    var numTrees = cleanedInput.map((foo,index) => {
+    var numTrees = slopeRows.map((foo,index) => {
         var i = index * direction.down;
-        var line = cleanedInput[i];
-        return (i <= cleanedInput.length) && line.charAt((index * direction.right) % line.length) === "#" ? 1 : 0;
+        var line = slopeRows[i];
+        return (i <= slopeRows.length) && line.charAt((index * direction.right) % line.length) === "#" ? 1 : 0;
     }).reduce((acc, val) => acc + val);
     return numTrees;
 }).reduce((acc, val) => acc * val, 1);

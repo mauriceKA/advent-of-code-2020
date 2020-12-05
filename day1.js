@@ -1,4 +1,4 @@
-var numbers = [
+var expenseAmounts = [
     1630,
     1801,
     1917,
@@ -202,10 +202,10 @@ var numbers = [
 ]
 
 var num1, num2;
-outer: for (var i=0; i<numbers.length; i++) {
-    num1 = numbers[i];
-    for (var j=i; j< numbers.length; j++) {
-        num2 = numbers[j];
+outer: for (var i=0; i<expenseAmounts.length; i++) {
+    num1 = expenseAmounts[i];
+    for (var j=i; j< expenseAmounts.length; j++) {
+        num2 = expenseAmounts[j];
         if (num1 + num2 === 2020) {
             break outer;
         }

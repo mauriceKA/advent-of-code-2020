@@ -997,13 +997,12 @@ var input = `4-7 z: zzzfzlzzz
 9-10 w: wwwwwwbwwhww
 5-6 g: kgggjg
 4-8 s: ssssssscs
-12-20 t: ttttttltttvttttttttt
-`;
+12-20 t: ttttttltttvttttttttt`;
 
 var reducer = (acc, val) => acc + val;
 
 // Part 1
-var numberOfValidPasswords = input.split("\n").filter( line => { return line.length > 0; } ).map( line => {
+var numberOfValidPasswords = input.split("\n").map( line => {
     var min, max, character, password;
     [, min, max, character, password] = line.match(/^(\d+)-(\d+) ([a-z]): ([a-z]+)$/);
 
@@ -1014,7 +1013,7 @@ var numberOfValidPasswords = input.split("\n").filter( line => { return line.len
 console.log(numberOfValidPasswords);
 
 // Part 2
-var numberOfValidPasswords = input.split("\n").filter( line => { return line.length > 0; } ).map( line => {
+var numberOfValidPasswords = input.split("\n").map( line => {
     var pos1, pos2, character, password;
     [, pos1, pos2, character, password] = line.match(/^(\d+)-(\d+) ([a-z]): ([a-z]+)$/);
     pos1 = parseInt(pos1);
