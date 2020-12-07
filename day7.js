@@ -616,20 +616,19 @@ var bagSpecs = input.split("\n").map(rule => {
 
 
 // Part 1 - compute transitive hull from shiny gold reverse
-var colorMap = {}, transitiveHullSize, transitiveHullSizeIncreased;
+var colorMap = {};
 var colorMapExtender = function (color) {
     bagSpecs.forEach(bagSpec => {
         var contained = bagSpec.successors.some( succ => { return succ.bagColor === color; } );
         if (contained) { colorMap[bagSpec.bagColor] = true; }
     });
 };
-colorMapExtender("shiny gold");
+colorMapExtender("shiny gold"); // initialize with the predecessors of shiny gold
 do {
     var currentColors = Object.keys(colorMap);
     var colorMapOriginalSize = currentColors.length;
     currentColors.forEach(colorMapExtender);
-    transitiveHullSizeIncreased = Object.keys(colorMap).length > colorMapOriginalSize;
-} while (transitiveHullSizeIncreased);
+} while (Object.keys(colorMap).length > colorMapOriginalSize);
 console.log(colorMapOriginalSize);
 
 // Part 2 - simple recursion
