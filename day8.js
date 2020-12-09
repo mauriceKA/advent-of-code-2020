@@ -615,7 +615,6 @@ var runUntilLoopOrTerminate = function (instructions) {
     var instructionHits = [];
 
     while (!instructionHits[instructionPointer] && instructionPointer !== instructions.length) {
-        //console.log(instructionPointer);
         instructionHits[instructionPointer] = true;
         var nextInstr = instructions[instructionPointer];
         switch (nextInstr.opcode) {
