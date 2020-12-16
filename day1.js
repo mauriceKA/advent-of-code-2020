@@ -201,6 +201,17 @@ var expenseAmounts = [
     1525,
 ]
 
+/*
+var expenseAmounts = `1721
+979
+366
+299
+675
+1456`;
+expenseAmounts = expenseAmounts.split("\n").map( amount => { return Number.parseInt(amount); });
+*/
+
+// part 1
 var num1, num2;
 outer: for (var i=0; i<expenseAmounts.length; i++) {
     num1 = expenseAmounts[i];
@@ -212,3 +223,24 @@ outer: for (var i=0; i<expenseAmounts.length; i++) {
     }
 }
 console.log(num1, num2, num1*num2);
+
+// part 2
+var num3;
+expenseAmounts.sort( (a,b) => { return b-a; } );
+outer: for (var i = 0; i < expenseAmounts.length; i++) {
+    num1 = expenseAmounts[i];
+        if (num1 < 2020) {
+        for (var j = i + 1; j < expenseAmounts.length; j++) {
+            num2 = expenseAmounts[j];
+            if (num1 + num2 < 2020) {
+                for (var k = j + 1; k < expenseAmounts.length; k++) {
+                    num3 = expenseAmounts[k];
+                    if (num1 + num2 + num3 === 2020) {
+                        break outer;
+                    }
+                }
+            }
+        }
+    }
+}
+console.log(num1, num2, num3, num1*num2*num3);
