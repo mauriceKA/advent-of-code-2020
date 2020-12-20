@@ -571,10 +571,18 @@ mem[51640] = 254698
 mem[35556] = 226072
 mem[32355] = 1445`;
 
-input = `mask = 000000000000000000000000000000X1001X
-mem[42] = 100
-mask = 00000000000000000000000000000000X0XX
-mem[26] = 1`;
+// input = `mask = 000000000000000000000000000000X1001X
+// mem[42] = 100
+// mask = 00000000000000000000000000000000X0XX
+// mem[26] = 1`;
+
+String.prototype.replaceAt = function(index, replacement) {
+  return this.substr(0, index) + replacement + this.substr(index + replacement.length);
+}
+
+String.prototype.countChars = function(char) {
+  return this.split("").reduce( (acc,val)=> { return acc + ((val === char) ? 1:0 ); },0);
+}
 
 // part 1
 var program = input.split("\n").map( line => {
@@ -609,8 +617,30 @@ var sumOfMemoryContent = mem.reduce( (acc, val) => { return acc + val; } );
 console.log(sumOfMemoryContent);
 
 // part 2
-// giving up after fighting for too long
-/*
+function extendAddr(addr) {
+  var addrs = {};
+  addrs[addr] = true;
+  var substitued;
+  do  {
+    substitued = false;
+    Object.keys(addrs).forEach( addr => {
+      var i = addr.indexOf("X");
+      if (i >= 0) {
+        addrs[addr.replaceAt(i,"0")] = true;
+        addrs[addr.replaceAt(i,"1")] = true;
+        delete addrs[addr];
+        substitued = true;
+      }
+    });
+  } while (substitued === true);
+  return Object.keys(addrs);
+}
+
+function arraySubtract(a1, a2) {
+  return a1.filter( addr => { return a2.indexOf(addr) < 0 } );
+}
+
+// add mask to every instruction
 program.forEach( instr => {
   if (instr.op === "mask") {
     mask = instr.val;
@@ -619,11 +649,13 @@ program.forEach( instr => {
   }
 });
 program = program.filter( (instr) => { return instr.op !== "mask"; } );
-program.reverse();
 
-var overwrittenBits = [];
+
+
+// calculate address set for every instruction
 program.forEach( (instr, iCount) => {
   var floatingCount = 0;
+  // calcualte effective address (addr plus mask applied)
   var effectiveAddr = instr.mask.split("").map( (char,i) => {
     switch (char) {
       case "0":
@@ -631,29 +663,25 @@ program.forEach( (instr, iCount) => {
       case "1":
         return "1";
       case "X":
-        if (overwrittenBits[i]) {
-          return "-";
-        } else {
-          floatingCount++;
-          overwrittenBits[i] = true;
-          return "X"; 
-        }
+        return "X"; 
     }
   }).reduce( (acc, val) => { return acc + val; }, "" );
+  //console.log("effective addr for instr(" + iCount + "): " + effectiveAddr);
   instr.effectiveAddr = effectiveAddr;
-  var memoryAddressesWritten = Math.pow(2, floatingCount); // without considering later writes
-  for (j = iCount - 1; j >= 0; j--) {
-    program[j].effectiveAddr.split("").map( (charInPrevWrite,i) => {
-      // subtract all previously written bytes
-      var charInCurrentWrite = effectiveAddr.charAt(i);
-      if (charInPrevWrite === "X") {
-        
-      }
-    }
+  instr.allAddresses = extendAddr(effectiveAddr);
+});  
+
+// calculate sums
+var memoryValuesSum = 0;
+program.forEach( (instr, iCount) => {
+  // go forward to later written addresses and eleminate any address that
+  // was overwritten later  
+  console.log(iCount + ": effective addresses before elimination: " + instr.allAddresses.length);
+  for (j = iCount + 1; j < program.length; j++) {
+    instr.allAddresses = arraySubtract(instr.allAddresses, program[j].allAddresses);
   }
-
-
-  console.log(instr, "\n", floatingCount, "\n", effectiveAddr, "\n", overwrittenBits);
+  console.log("effective addresses after elimination: " + instr.allAddresses.length);
+  memoryValuesSum += instr.val * instr.allAddresses.length;
 });
-console.log(program);
-*/
+console.log(memoryValuesSum);
+
