@@ -633,11 +633,16 @@ function extendAddr(addr) {
       }
     });
   } while (substitued === true);
-  return Object.keys(addrs);
+  return addrs;
 }
 
-function arraySubtract(a1, a2) {
-  return a1.filter( addr => { return a2.indexOf(addr) < 0 } );
+// deletes properties in o1 that are also present in o2
+function objectSubtract(o1, o2) {
+  Object.keys(o1).forEach( addr => { 
+    if (o2[addr]) {
+      delete o1[addr];
+    } 
+  });
 }
 
 // add mask to every instruction
@@ -676,12 +681,12 @@ var memoryValuesSum = 0;
 program.forEach( (instr, iCount) => {
   // go forward to later written addresses and eleminate any address that
   // was overwritten later  
-  console.log(iCount + ": effective addresses before elimination: " + instr.allAddresses.length);
+  console.log(iCount + ": effective addresses before elimination: " + Object.keys(instr.allAddresses).length);
   for (j = iCount + 1; j < program.length; j++) {
-    instr.allAddresses = arraySubtract(instr.allAddresses, program[j].allAddresses);
+    objectSubtract(instr.allAddresses, program[j].allAddresses);
   }
-  console.log("effective addresses after elimination: " + instr.allAddresses.length);
-  memoryValuesSum += instr.val * instr.allAddresses.length;
+  var effectiveAddrCount = Object.keys(instr.allAddresses).length;
+  console.log("effective addresses after elimination: " + effectiveAddrCount);
+  memoryValuesSum += instr.val * effectiveAddrCount;
 });
 console.log(memoryValuesSum);
-
